@@ -7,19 +7,31 @@
         placeholder="Enter movie title"
         class="page-home__input"
       />
+      <multiselect
+        v-model="movieType"
+        :options="movieTypeList"
+        hide-selected
+        class="page-home__select"
+      />
     </div>
   </div>
 </template>
 
 <script>
   import debounce from 'lodash.debounce'
+  import Multiselect from 'vue-multiselect'
+  import 'vue-multiselect/dist/vue-multiselect.min.css'
 
   export default {
     name: 'Home',
-    components: {},
+    components: {
+      Multiselect
+    },
     data () {
       return {
-        movieTitle: ''
+        movieTitle: '',
+        movieType: 'All',
+        movieTypeList: ['All', 'Movies', 'TV series']
       }
     },
     watch: {
@@ -48,6 +60,11 @@
       width: 90%;
       display: block;
       transition: all 0.3s;
+    }
+
+    &__select {
+      width: 90%;
+      margin: 0 auto;
     }
   }
 </style>
