@@ -1,4 +1,4 @@
-# movie-test
+# MovieTest
 
 ## Project setup
 ```

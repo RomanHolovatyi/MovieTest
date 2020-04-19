@@ -11,9 +11,6 @@ export default new Vuex.Store({
       token: '273b9080'
     }
   },
-  mutations: {
-  },
-  actions: {},
   modules: {
     movies
   }

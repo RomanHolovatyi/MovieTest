@@ -1,9 +1,9 @@
 <template>
   <div class="page page-home">
     <div class="wrapper">
-      <div class="page-home__title">Find movie to watch</div>
+      <div class="page-home__title">Find movie to watch, {{ user.name }}</div>
       <input
-        v-model="movieTitle"
+        v-model="searchQuery"
         placeholder="Enter movie title"
         class="page-home__input"
       />
@@ -13,6 +13,7 @@
         hide-selected
         class="page-home__select"
       />
+      <movie-list :movie-list="movieList" />
     </div>
   </div>
 </template>
@@ -21,23 +22,40 @@
   import debounce from 'lodash.debounce'
   import Multiselect from 'vue-multiselect'
   import 'vue-multiselect/dist/vue-multiselect.min.css'
+  import movieList from '@/components/MovieList'
+  import { mapState, mapActions } from 'vuex'
 
   export default {
     name: 'Home',
     components: {
-      Multiselect
+      Multiselect,
+      movieList
     },
     data () {
       return {
-        movieTitle: '',
         movieType: 'All',
-        movieTypeList: ['All', 'Movies', 'TV series']
+        movieTypeList: ['All', 'Movies', 'TV series'],
+        page: 1,
+        searchQuery: ''
       }
     },
+    computed: {
+      ...mapState({
+        movieList: state => state.movies.movieList,
+        movieTotal: state => state.movies.movieTotalCount,
+        user: state => state.user
+      })
+    },
     watch: {
-      movieTitle: debounce(function () {
-        console.log('RUN')
+      searchQuery: debounce(function () {
+        if (this.searchQuery.length < 3) return
+        this.fetchMovieList({ searchQuery: this.searchQuery, page: this.page })
       }, 300)
+    },
+    methods: {
+      ...mapActions({
+        fetchMovieList: 'movies/fetchMovieList'
+      })
     }
   }
 </script>

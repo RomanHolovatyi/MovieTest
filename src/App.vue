@@ -17,4 +17,10 @@
     color: #2c3e50;
     margin-top: 60px;
   }
+
+  .wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px;
+  }
 </style>
