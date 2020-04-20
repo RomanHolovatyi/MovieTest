@@ -1,5 +1,9 @@
 # MovieTest
 
+## Demo
+
+http://movies-test.surge.sh
+
 ## Project setup
 ```
 npm install
