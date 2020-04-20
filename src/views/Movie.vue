@@ -1,13 +1,20 @@
 <template>
-  <div class="page page-movie">
-    <div class="wrapper">
-      <h1>{{ movie.Title }}</h1>
-      <img
-        :src="movie.Poster"
-        :alt="movie.Title"
-      >
-      <router-link :to="{ name: 'Home' }">To Home Page</router-link>
-    </div>
+  <div
+    v-if="movie"
+    class="page page-movie"
+  >
+    <h1>{{ movie.Title }}</h1>
+    <img
+      :src="movie.Poster"
+      :alt="movie.Title"
+      class="page-movie__poster"
+    >
+    <router-link
+      :to="{ name: 'Home' }"
+      class="button"
+    >
+      To Home Page
+    </router-link>
   </div>
 </template>
 
@@ -18,7 +25,7 @@
     name: 'Movie',
     data () {
       return {
-        movie: {}
+        movie: null
       }
     },
     methods: {
@@ -33,5 +40,15 @@
 </script>
 
 <style lang="scss" scoped>
+  .page-movie {
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
+    &__poster {
+      margin: 0 auto 30px;
+    }
+  }
 </style>

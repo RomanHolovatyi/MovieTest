@@ -1,20 +1,29 @@
 <template>
   <div class="page page-home">
-    <div class="wrapper">
-      <div class="page-home__title">Find movie to watch, {{ user.name }}</div>
-      <input
-        v-model="searchQuery"
-        placeholder="Enter movie title"
-        class="page-home__input"
-      />
-      <multiselect
-        v-model="movieType"
-        :options="movieTypeList"
-        hide-selected
-        class="page-home__select"
-      />
-      <movie-list :movie-list="movieList" />
-    </div>
+    <div class="page-home__title">Find movie to watch, {{ user.name }}</div>
+    <input
+      v-model="searchQuery"
+      placeholder="Enter movie title"
+      class="page-home__input"
+    >
+    <multiselect
+      v-model="movieType"
+      :options="movieTypeList"
+      hide-selected
+      label="text"
+      track-by="value"
+      class="page-home__select"
+      @select="onTypeSelect"
+    />
+    <h2>Total Results: {{ movieTotalCount }}</h2>
+    <movie-list :movie-list="movieList" />
+    <button
+      v-if="isShowMoreButtonVisible"
+      class="button page-home__button"
+      @click="loadMoreMovies"
+    >
+      Load More
+    </button>
   </div>
 </template>
 
@@ -33,8 +42,24 @@
     },
     data () {
       return {
-        movieType: 'All',
-        movieTypeList: ['All', 'Movies', 'TV series'],
+        movieType: {
+          text: 'All',
+          value: ''
+        },
+        movieTypeList: [
+          {
+            text: 'All',
+            value: ''
+          },
+          {
+            text: 'Movies',
+            value: 'movie'
+          },
+          {
+            text: 'TV Series',
+            value: 'series'
+          }
+        ],
         page: 1,
         searchQuery: ''
       }
@@ -42,20 +67,36 @@
     computed: {
       ...mapState({
         movieList: state => state.movies.movieList,
-        movieTotal: state => state.movies.movieTotalCount,
+        movieTotalCount: state => state.movies.movieTotalCount,
         user: state => state.user
-      })
+      }),
+      isShowMoreButtonVisible () {
+        return this.movieTotalCount - this.page * 10 > 0
+      },
     },
     watch: {
       searchQuery: debounce(function () {
-        if (this.searchQuery.length < 3) return
-        this.fetchMovieList({ searchQuery: this.searchQuery, page: this.page })
+        this.page = 1
+        this.loadMovies()
       }, 300)
     },
     methods: {
       ...mapActions({
         fetchMovieList: 'movies/fetchMovieList'
-      })
+      }),
+      loadMovies (type = this.movieType) {
+        if (this.searchQuery.length < 3) return
+        let params = { searchQuery: this.searchQuery, page: this.page, type: type.value }
+        this.fetchMovieList(params)
+      },
+      loadMoreMovies () {
+        this.page += 1
+        this.loadMovies()
+      },
+      onTypeSelect (newType) {
+        this.page = 1
+        this.loadMovies(newType)
+      }
     }
   }
 </script>
@@ -70,7 +111,7 @@
     &__input {
       color: #333;
       font-size: 1.2rem;
-      margin: 0 auto;
+      margin: 20px auto;
       padding: 1.5rem 2rem;
       border-radius: 0.2rem;
       background-color: rgb(255, 255, 255);
@@ -83,6 +124,10 @@
     &__select {
       width: 90%;
       margin: 0 auto;
+    }
+
+    &__button {
+      margin-top: 20px;
     }
   }
 </style>
