@@ -1,30 +1,32 @@
 <template>
-  <div class="page page-home">
-    <div class="page-home__title">Find movie to watch, {{ user.name }}</div>
-    <input
-      v-model="searchQuery"
-      placeholder="Enter movie title"
-      class="page-home__input"
-    >
-    <multiselect
-      v-model="movieType"
-      :options="movieTypeList"
-      hide-selected
-      label="text"
-      track-by="value"
-      class="page-home__select"
-      @select="onTypeSelect"
-    />
-    <h2>Total Results: {{ movieTotalCount }}</h2>
-    <movie-list :movie-list="movieList" />
-    <button
-      v-if="isShowMoreButtonVisible"
-      class="button page-home__button"
-      @click="loadMoreMovies"
-    >
-      Load More
-    </button>
-  </div>
+  <keep-alive>
+    <div class="page page-home">
+      <div class="page-home__title">Find movie to watch, {{ user.name }}</div>
+      <input
+        v-model="searchQuery"
+        placeholder="Enter movie title"
+        class="page-home__input"
+      >
+      <multiselect
+        v-model="movieType"
+        :options="movieTypeList"
+        hide-selected
+        label="text"
+        track-by="value"
+        class="page-home__select"
+        @select="onTypeSelect"
+      />
+      <h2>Total Results: {{ movieTotalCount }}</h2>
+      <movie-list :movie-list="movieList" />
+      <button
+        v-if="isShowMoreButtonVisible"
+        class="button page-home__button"
+        @click="loadMoreMovies"
+      >
+        Load More
+      </button>
+    </div>
+  </keep-alive>
 </template>
 
 <script>
@@ -78,7 +80,7 @@
       searchQuery: debounce(function () {
         this.page = 1
         this.loadMovies()
-      }, 300)
+      }, 700)
     },
     methods: {
       ...mapActions({
